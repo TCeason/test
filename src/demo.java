@@ -65,6 +65,7 @@ public class demo {
                         if (i % Integer.valueOf(br) == 0){
                             Long start = System.currentTimeMillis();
                             ps_stmt.executeBatch();
+                            ps_stmt.clearBatch();
                             Long end = System.currentTimeMillis();
                             batchs_time += end - start;
                             System.out.println(System.currentTimeMillis() + " 一批次 query 执行完毕");
@@ -72,6 +73,7 @@ public class demo {
                     }
                     // 最后插入不足1w条的数据
                     ps_stmt.executeBatch();
+                    ps_stmt.clearBatch();
                     ps_stmt.close();
                     conn.close();
                     System.out.println("insert cost time = " + batchs_time + "ms");
@@ -131,7 +133,7 @@ public class demo {
 
         if (commandLine.hasOption('h')) {
             System.out.println( "Help Message");
-            System.out.println("./bench8028 --thread-nums=2 --host=127.0.0.1 --user=root --password=root --port=3307 --batch-rows=1000 --total-rows=60000");
+            System.out.println("./bench8023 --thread-nums=2 --host=127.0.0.1 --user=root --password=root --port=3307 --batch-rows=1000 --total-rows=60000");
             System.exit(0);
         }
         String user = null;
@@ -162,7 +164,7 @@ public class demo {
             tr = commandLine.getOptionValue("tr");
         }
         if (host != null && port != null) {
-            url = "jdbc:mysql://"+ host +":" + port + "/db?useSSL=false";
+            url = "jdbc:mysql://"+ host +":" + port + "/db?useSSL=false&rewriteBatchedStatements=true";
         }
         if (commandLine.hasOption("tn")) {
             threadNum = commandLine.getOptionValue("tn");

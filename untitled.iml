@@ -58,22 +58,22 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28/src/build/java" />
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28/src/demo/java" />
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28/src/generated/java" />
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28/src/legacy/java" />
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28/src/main/core-api/java" />
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28/src/main/core-impl/java" />
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28/src/main/protocol-impl/java" />
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28/src/main/user-api/java" />
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28/src/main/user-impl/java" />
-          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28/src/test/java" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23/src/build/java" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23/src/demo/java" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23/src/generated/java" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23/src/legacy/java" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23/src/main/core-api/java" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23/src/main/core-impl/java" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23/src/main/protocol-impl/java" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23/src/main/user-api/java" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23/src/main/user-impl/java" />
+          <root url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23/src/test/java" />
         </SOURCES>
-        <jarDirectory url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.28" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/Downloads/jar_files/mysql-connector-java-8.0.23" recursive="false" />
       </library>
     </orderEntry>
   </component>
