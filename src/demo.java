@@ -3,23 +3,24 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.concurrent.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.cli.*;
-import org.apache.commons.cli.BasicParser;
 
 @Slf4j
 public class demo {
     private static ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("thread-pool-%s").build();
     static final String JdbcDriver = "com.mysql.cj.jdbc.Driver";
-    public static void multiThreadImport(final int threadNum,String url, String user, String password, String tr, String br) {
+    public static void multiThreadImport(final int threadNum, String url, String user, String password, String tr, String br, int maxThreadNums) {
         final CountDownLatch cdl = new CountDownLatch(threadNum);
         long starttime = System.currentTimeMillis();
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(threadNum, 15, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(50000), threadFactory);
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(threadNum, maxThreadNums, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(50000), threadFactory);
         for (int k = 1; k <= threadNum; k++) {
+            int finalK = k;
             executor.execute(() -> {
                 Connection conn = null;
                 try{
@@ -33,12 +34,12 @@ public class demo {
 
                     // 执行查询
                     System.out.println(System.currentTimeMillis() + " 准备执行query...");
-                    String sql = "insert into db.t (id1, id2, id3,id4,id5,id6,id7,id8,id9,id10,id11,id12,id13,id14,id15,id16,str1,str2,str3,dt) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    String sql = "insert into db.t (id1, id2, id3,id4,id5,id6,id7,id8,id9,id10,id11,id12,id13,id14,id15,id16,str1,str2,str3,dt) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                     PreparedStatement ps_stmt = conn.prepareStatement(sql);
 
                     Random r = new Random();
                     int batchs_time = 0;
-                    for(int i=1; i<Integer.valueOf(tr); i++){
+                    for(int i=0; i<Integer.valueOf(tr); i++){
                         ps_stmt.setInt(1, i);
                         ps_stmt.setInt(2, r.nextInt(10));
                         ps_stmt.setInt(3, r.nextInt(100));
@@ -76,7 +77,7 @@ public class demo {
                     ps_stmt.clearBatch();
                     ps_stmt.close();
                     conn.close();
-                    System.out.println("insert cost time = " + batchs_time + "ms");
+                    System.out.println("第" + finalK + " 个线程写入耗时：" + batchs_time + "ms");
                 }catch(SQLException se){
                     // 处理 JDBC 错误
                     se.printStackTrace();
@@ -86,12 +87,13 @@ public class demo {
                 }finally{
                     // 关闭资源
                     try{
+                        cdl.countDown();
                         if(conn!=null) conn.close();
+
                     }catch(SQLException se){
                         se.printStackTrace();
                     }
                 }
-
                 System.out.println("\n执行成功！");
             }
             );
@@ -99,7 +101,7 @@ public class demo {
         try {
             cdl.await();
             long spendtime = System.currentTimeMillis() - starttime;
-            System.out.println(threadNum + "个线程花费时间:" + spendtime/1000+"S");
+            System.out.println(threadNum + "个线程总共花费时间: " + spendtime + "ms (包括拼语句时长)");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -116,7 +118,7 @@ public class demo {
         options.addOption("P", "port", true, "port");
         options.addOption("H", "host", true, "host");
         options.addOption("tn", "thread-nums", true, "thread nums");
-
+        options.addOption("mtn", "max-allowed-thread-nums", true, "max thread nums");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine commandLine = null;
@@ -133,7 +135,7 @@ public class demo {
 
         if (commandLine.hasOption('h')) {
             System.out.println( "Help Message");
-            System.out.println("./bench8023 --thread-nums=2 --host=127.0.0.1 --user=root --password=root --port=3307 --batch-rows=1000 --total-rows=60000");
+            System.out.println("./bench8028 --thread-nums=2 --max-allowed-thread-nums=4 --host=127.0.0.1 --user=root --password=root --port=3307 --batch-rows=1000 --total-rows=60000");
             System.exit(0);
         }
         String user = null;
@@ -144,7 +146,7 @@ public class demo {
         String br = null;
         String tr = null;
         String threadNum = null;
-
+        String maxThreadNums = null;
         if (commandLine.hasOption("u")) {
             user = commandLine.getOptionValue("--user");
         }
@@ -164,12 +166,17 @@ public class demo {
             tr = commandLine.getOptionValue("tr");
         }
         if (host != null && port != null) {
-            url = "jdbc:mysql://"+ host +":" + port + "/db?useSSL=false&rewriteBatchedStatements=true";
+            url = "jdbc:mysql://"+ host +":" + port + "/db?useSSL=false&rewriteBatchedStatements=true&&allowMultiQueries=true&useUnicode=true";
         }
         if (commandLine.hasOption("tn")) {
             threadNum = commandLine.getOptionValue("tn");
         }
-        multiThreadImport(Integer.valueOf(threadNum),url, user, password, tr, br);
+        if (commandLine.hasOption("mtn")) {
+            maxThreadNums = commandLine.getOptionValue("mtn");
+        }
+        multiThreadImport(Integer.valueOf(threadNum),url, user, password, tr, br, Integer.valueOf(maxThreadNums));
+        System.out.println(threadNum + " threads insert done.");
+        return;
     }
 }
 
