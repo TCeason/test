@@ -39,11 +39,11 @@ the `bench8023` use jdbc-8023
 the `bench8028` use jdbc-8028
 
 ```
-./bench8023 --thread-nums=2 --host=127.0.0.1 --user=root --password=root --port=3307 --batch-rows=1000 --total-rows=60000
+./bench8023 --thread-nums=2 --max-allowed-thread-nums=4 --host=127.0.0.1 --user=root --password=root --port=3307 --batch-rows=1000 --total-rows=60000
 
 OR
 
-./bench8028 --thread-nums=2 --host=127.0.0.1 --user=root --password=root --port=3307 --batch-rows=1000 --total-rows=60000
+./bench8028 --thread-nums=2 --max-allowed-thread-nums=4 --host=127.0.0.1 --user=root --password=root --port=3307 --batch-rows=1000 --total-rows=60000
 
 
 ```
